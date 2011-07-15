@@ -1,7 +1,8 @@
 class Pinion::Plugins::Default
   class Panel
     def self.add(item)
-      ::Pinion.panel.add(item)
+      #::Pinion.panel.add(item)
+      ::Pinion.panel.hbox.pack_end(item)
       ::Pinion.panel.show_all
     end
   end

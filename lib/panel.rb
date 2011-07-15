@@ -23,6 +23,15 @@ class Pinion::Panel < Gtk::Window
     # Signals
     self.signal_connect('check-resize') {realign}
     self.signal_connect('expose-event') {|w, e| draw(w, e); false}
+
+    # Set up HBox
+    @@hbox = Gtk::HBox.new(false, Configru.spacing)
+    self.add(@@hbox)
+  end
+
+  # Hackkkk D:
+  def hbox
+    @@hbox
   end
 
   def realign
@@ -44,6 +53,7 @@ class Pinion::Panel < Gtk::Window
         height      24
         transparent true
         time_format "%a %b %d, %I:%M:%S %p" # "Thu Jul 14, 07:40:50 PM"
+        spacing     10 # Default to 10px spacing between each item
         plugins     ['clock']
       end
       
@@ -51,6 +61,7 @@ class Pinion::Panel < Gtk::Window
         height      Fixnum
         transparent [true, false]
         time_format String
+        spacing     Numeric
         plugins     Array
       end
     end
