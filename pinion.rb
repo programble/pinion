@@ -57,6 +57,7 @@ class Panel < Gtk::Window
       verify do
         height      Fixnum
         transparent [true, false]
+        time_format String
       end
     end
   end
