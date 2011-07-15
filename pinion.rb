@@ -47,7 +47,7 @@ class Panel < Gtk::Window
 
   def load_config
     Configru.load do
-      cascade '~/.pinion.yml', '~/.config/pinion.yml', '/etc/pinion/config.yml'
+      cascade '~/.pinion.yml', '~/.config/pinion/config.yml', '/etc/pinion/config.yml'
       defaults do
         height      24
         transparent true
