@@ -3,7 +3,7 @@ require 'lib/time'
 class Pinion::Timer
   attr_accessor :queue
   def initialize
-    # @queue is an array in the form of 
+    # @queue is an array in the form of [time, interval, handler]
     @queue = []
     run
   end
@@ -21,7 +21,8 @@ class Pinion::Timer
           q[0] += q[1]
           q[2].call
         end
-        sleep 1 # Meh?
+        # This seems to be enough, so I'll leave it like this for now...
+        sleep 0.1
       end
     end
   end

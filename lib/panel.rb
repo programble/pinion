@@ -44,12 +44,14 @@ class Pinion::Panel < Gtk::Window
         height      24
         transparent true
         time_format "%a %b %d, %I:%M:%S %p" # "Thu Jul 14, 07:40:50 PM"
+        plugins     ['clock']
       end
       
       verify do
         height      Fixnum
         transparent [true, false]
         time_format String
+        plugins     Array
       end
     end
   end

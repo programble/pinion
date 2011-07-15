@@ -16,23 +16,18 @@ class Pinion
     Configru.plugins.each do |plugin|
       Pinion::Plugins.load(plugin)
     end
+    ::Pinion.panel.show_all
   end
 
   # Ew hacks D:
-  def self.panel
-    @@panel
-  end
-
-  def self.timer(interval, thread = false, &handler)
-    @@timer.add(interval, thread, &handler)
-    # TODO: This should somehow be triggered from Timer...how?
-    ::Pinion.panel.show_all
-  end
+  def self.panel; @@panel; end
+  def self.timer; @@timer; end
 end
 
 require 'lib/panel'
 require 'lib/timer'
 require 'lib/plugins'
+require 'plugins/default'
 
 Pinion.new
 Gtk.main
