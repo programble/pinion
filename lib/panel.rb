@@ -64,23 +64,16 @@ class Pinion::Panel < Gtk::Window
     c.paint
   end
 
-
   def load_config
     Configru.load do
       cascade '~/.pinion.yml', '~/.config/pinion/config.yml', '/etc/pinion/config.yml'
-      defaults do
-        height      24
-        transparent true
-        time_format "%a %b %d, %I:%M:%S %p" # "Thu Jul 14, 07:40:50 PM"
-        spacing     10 # Default to 10px spacing between each item
-        use_gtk     true
-        plugins     ['clock']
-      end
-      
+      defaults File.join(File.dirname(__FILE__), '..', 'config.yml.dist')
+
       verify do
         height      Fixnum
         transparent [true, false]
-        time_format String
+        opacity     Numeric
+        background  String
         spacing     Numeric
         use_gtk     [true, false]
         plugins     Array
