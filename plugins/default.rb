@@ -1,4 +1,11 @@
 class Pinion::Plugins::Default
+  attr_accessor :config
+  @config = nil
+
+  def configure(config)
+    @config = config
+  end
+
   class Panel
     def self.add(item)
       ::Pinion.panel.hbox.pack_end(item)

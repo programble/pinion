@@ -1,7 +1,18 @@
+begin
+  require 'rubygems'
+  require 'color'
+rescue
+  warn "Please install the 'color' gem"
+end
+
 class Pinion::Panel < Gtk::Window
   def initialize
     super('Pinion')
     load_config
+
+    @transparent = nil
+    @rgb = [1.0, 1.0, 1.0]
+    @opacity = Configru.opacity
 
     # Not sure if I should go for _DOCK or _DESKTOP
     self.type_hint = Gdk::Window::TYPE_HINT_DOCK
@@ -10,14 +21,18 @@ class Pinion::Panel < Gtk::Window
     self.gravity = Gdk::Window::GRAVITY_NORTH_EAST # Not sure if this actually does anything
     self.height_request = Configru.height
 
+    # app_paintable's value is false if we use the GTK theme,
+    #\ and true otherwise
+    self.app_paintable = !Configru.gtk_theme
+
     if self.screen.composited? && Configru.transparent
-      # Screen is composited and transparency is enabled, use transparency
-      self.app_paintable = true
+      # Use RGBA colormap if transparency is enabled
       self.colormap = self.screen.rgba_colormap
+      @transparent = true
     else
-      # Screen is not composited, use normal GTK them
-      self.app_paintable = false # Use GTK theme(?)
+      # Screen is not ocmposited, use RBG colormap
       self.colormap = self.screen.rgb_colormap
+      @transparent = false
     end
 
     # Signals
@@ -40,7 +55,11 @@ class Pinion::Panel < Gtk::Window
 
   def draw(w, e)
     c = w.window.create_cairo_context
-    c.set_source_rgba(1.0, 1.0, 1.0, 0.0)
+    if @transparent
+      c.set_source_rgba(@rgb[0], @rgb[1], @rgb[2], @opacity)
+    else
+      c.set_source_rgb(@rgb[0], @rgb[1], @rgb[2])
+    end
     c.operator = Cairo::OPERATOR_SOURCE
     c.paint
   end
@@ -54,6 +73,7 @@ class Pinion::Panel < Gtk::Window
         transparent true
         time_format "%a %b %d, %I:%M:%S %p" # "Thu Jul 14, 07:40:50 PM"
         spacing     10 # Default to 10px spacing between each item
+        use_gtk     true
         plugins     ['clock']
       end
       
@@ -62,6 +82,7 @@ class Pinion::Panel < Gtk::Window
         transparent [true, false]
         time_format String
         spacing     Numeric
+        use_gtk     [true, false]
         plugins     Array
       end
     end

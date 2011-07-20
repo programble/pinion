@@ -14,7 +14,8 @@ class Pinion
 
   def load_plugins
     # Reverse so it's left->right instead of right->left
-    Configru.plugins.reverse.each do |plugin|
+    Configru['plugins'].reverse!
+    Configru.plugins.each do |plugin|
       Pinion::Plugins.load(plugin)
     end
     ::Pinion.panel.show_all
