@@ -11,8 +11,31 @@ class Pinion::Panel < Gtk::Window
     load_config
 
     @transparent = nil
-    @rgb = [1.0, 1.0, 1.0]
     @opacity = Configru.opacity
+
+    begin
+      if Configru.background.is_a?(Array)
+        # Array of [red, green, blue]
+        @rgb = Configru.background
+      elsif Configru.background.is_a?(String)
+        # HTML hex code, such as #FFF or #ABCDEF
+        if Configru.background[0,1] == '#'
+          @rgb = Color::RGB.from_html(Configru.background)
+        else
+          @rgb = Color::RGB.const_get(Configru.background.delete(' '))
+        end
+      else
+        raise # Hackish? Maybe. Oh well.
+      end
+    rescue
+      warn "Invalid background color specified!\n"
+      warn "The `background' configuration option can be defined in 3 ways:"
+      warn "1) Array: [red, green, blue]  (ie, [1.0, 1.0, 1.0] for white)"
+      warn "2) Hex value: #ABCDEF (ie, #FFF or #FFFFFF for white)"
+      warn "3) One of the names mentioned on http://en.wikipedia.org/wiki/X11_color_names#Color_name_charts"
+      warn "   Capitalization of color names matter, spacing does not!"
+      exit
+    end
 
     # Not sure if I should go for _DOCK or _DESKTOP
     self.type_hint = Gdk::Window::TYPE_HINT_DOCK
@@ -56,9 +79,9 @@ class Pinion::Panel < Gtk::Window
   def draw(w, e)
     c = w.window.create_cairo_context
     if @transparent
-      c.set_source_rgba(@rgb[0], @rgb[1], @rgb[2], @opacity)
+      c.set_source_rgba(@rgb.red, @rgb.green, @rgb.blue, @opacity)
     else
-      c.set_source_rgb(@rgb[0], @rgb[1], @rgb[2])
+      c.set_source_rgb(@rgb.red, @rgb.green, @rgb.blue)
     end
     c.operator = Cairo::OPERATOR_SOURCE
     c.paint
