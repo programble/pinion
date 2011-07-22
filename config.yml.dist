@@ -1,0 +1,10 @@
+height:      24
+transparent: true
+opacity:     0.5
+background:  '#000'
+spacing:     10
+use-gtk:     false
+
+plugins:
+  - type:   clock
+    format: "%a %b %d, %I:%M:%S %p" # "Thu Jul 14, 07:40:50 PM"
