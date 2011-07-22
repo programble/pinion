@@ -73,7 +73,17 @@ class Pinion::Panel < Gtk::Window
   end
 
   def realign
-    self.move(self.screen.width - self.size[0], 0)
+    width, height = self.size
+    case Configru.position
+    when 'top-left'
+      self.move(0, 0)
+    when 'top-right'
+      self.move(self.screen.width - width, 0)
+    when 'bottom-left'
+      self.move(0, self.screen.height - height)
+    when 'bottom-right'
+      self.move(self.screen.width - width, self.screen.height - height)
+    end
   end
 
   def draw(w, e)
@@ -94,6 +104,7 @@ class Pinion::Panel < Gtk::Window
 
       verify do
         height      Fixnum
+        position    ['top-left', 'top-right', 'bottom-left', 'bottom-right']
         transparent [true, false]
         opacity     Numeric
         background  String
